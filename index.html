@@ -22,6 +22,12 @@
     <script>
       const projectNameKey = 'projectName';
       const selectedCameraKey = 'selectedCameraId';
+      const stopCamera = () => {
+        Quagga.offDetected();
+        Quagga.stop();
+        document.getElementById('camera-view').innerHTML = '';
+        document.getElementById('result-view').innerHTML = '';
+      };
       const startCamera = (deviceId) => {
         Quagga.init({
           inputStream: {
@@ -67,9 +73,7 @@
         Quagga.onDetected((result) => {
           if (result.codeResult.code.startsWith('978')) {
             console.log(result.codeResult.code);
-            Quagga.offDetected();
-            Quagga.stop();
-            document.getElementById('camera-view').innerHTML = '';
+            stopCamera();
             showResult(result.codeResult.code);
           }
         })
@@ -119,29 +123,33 @@
         window.open(scrapboxUrl);
       }
       window.onload = () => {
-        listUpCamera();
+        // プロジェクト名関係初期化
         const projectName = localStorage.getItem(projectNameKey, null);
         const projectNameInput = document.getElementById('project-name');
         projectNameInput.onchange = (e) => {
           localStorage.setItem(projectNameKey, e.target.value);
         };
         projectNameInput.value = projectName;
+        // カメラ関係初期化
+        const selectedCameraId = localStorage.getItem(selectedCameraKey, null)
+        listUpCamera();
         document.getElementById('start-camera').onclick = () => {
-          document.getElementById('result-view').innerHTML = '';
           const selectedCameraId = localStorage.getItem(selectedCameraKey, null)
+          stopCamera();
           startCamera(selectedCameraId);
         };
+        startCamera(selectedCameraId);
       };
     </script>
   </head>
   <body>
 
     <main class="container">
-      <div class="text-center py-5 px-3">
+      <div class="text-center py-2 px-3">
         <h1>Barcode reader for Scrapbox</h1>
         <p class="lead">Javascriptでカメラを起動してバーコードをスキャンし、その商品のページをScrapboxに作ります</p>
       </div>
-      <div class="text-center py-5 px-3">
+      <div class="text-center py-2 px-3">
         <div class="mb-3">
           <input id="project-name" type="text" class="form-control" id="floatingInput" placeholder="Scrapbox project name">
         </div>
