@@ -104,7 +104,7 @@
         if (searchKeyword === '') {
           return null;
         }
-        const searchRes = await fetch('http://ws-fe.amazon-adsystem.com/widgets/q?Operation=GetResults&SearchIndex=All&multipageStart=0&InstanceId=0&multipageCount=6&TemplateId=MobileSearchResults&ServiceVersion=20070822&MarketPlace=JP&Keywords='+searchKeyword);
+        const searchRes = await fetch('https://ws-fe.amazon-adsystem.com/widgets/q?Operation=GetResults&SearchIndex=All&multipageStart=0&InstanceId=0&multipageCount=6&TemplateId=MobileSearchResults&ServiceVersion=20070822&MarketPlace=JP&Keywords='+searchKeyword);
         let searchResult = await searchRes.text();
         searchResult = searchResult.substr('search_callback('.length+1);
         searchResult = searchResult.substr(0, searchResult.length-2);
